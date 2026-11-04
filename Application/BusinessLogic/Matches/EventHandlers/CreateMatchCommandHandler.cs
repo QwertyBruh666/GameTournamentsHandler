@@ -1,6 +1,7 @@
 using Application.BusinessLogic.Matches.Commands;
 using Application.BusinessLogic.Matches.Dtos;
 using Application.Contracts;
+using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,19 +12,21 @@ public class CreateMatchCommandHandler(IAppDbContext appDbContext, ICurrentUser 
     public async Task<Guid> Handle(CreateMatchCommand request, CancellationToken cancellationToken)
     {
         CreateMatchDto matchDto = request.Match;
-        if (!await appDbContext.Tournaments.AnyAsync(t => t.Id == request.TournamentId && t.OrganizerId == currUser.GetUserId(), cancellationToken))
+        Tournament? tour = await  appDbContext.Tournaments.FindAsync(request.TournamentId) ?? throw new Exception("Tournament not found");
+        
+        if (tour.OrganizerId == currUser.GetUserId())
             throw new Exception("You dont have enough rights");
+        
+        if (request.Match.StartsAt < tour.StartsAt || request.Match.EndsAt > tour.EndsAt)
+            throw new Exception("You cant start match before tournament");
 
         var match = await appDbContext.Matches
             .FirstOrDefaultAsync(
                 m => 
                     m.TournamentId == request.TournamentId && 
                     m.Round == 1 &&
-                    m.ScheduleStartsAt == null &&
-                    m.ScheduleEndsAt == null &&
-                    m.Participant1Id == null &&
-                    m.Participant2Id == null, cancellationToken) ?? throw new Exception("There is no empty match");
-
+                    m.Position == request.Match.Position, cancellationToken) ?? throw new Exception("There is no empty match");
+        
         match.ScheduleStartsAt = matchDto.StartsAt;
         match.ScheduleEndsAt = matchDto.EndsAt;
         match.Participant1Id = matchDto.Team1Id;

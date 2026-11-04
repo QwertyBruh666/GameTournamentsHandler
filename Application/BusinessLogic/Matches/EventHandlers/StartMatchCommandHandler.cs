@@ -11,10 +11,6 @@ public class StartMatchCommandHandler(IAppDbContext appDbContext, ICurrentUser c
     public async Task<Guid> Handle(StartMatchCommand request, CancellationToken cancellationToken)
     {
         Match match = await auth.GetAuthorizedAsync(request.MatchId, currUser.GetUserId(), cancellationToken);
-
-        if (match.Tournament!.Status != TournamentStatus.InProgress)
-            throw new Exception("Cannot start match because tournament is not in progress");
-        
         match.Status = MatchStatus.InProgress;
         match.ActualStartsAt = DateTime.UtcNow;
         await appDbContext.SaveChangesAsync(cancellationToken);

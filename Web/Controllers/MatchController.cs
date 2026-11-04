@@ -11,6 +11,13 @@ namespace Web.Controllers;
 [Route("api/matches")]
 public class MatchController(ISender sender) : ControllerBase
 {
+    [HttpPut("{matchId}/start")]
+    public async Task<IActionResult> StartMatch(Guid matchId)
+    {
+        await sender.Send(new StartMatchCommand(matchId));
+        return Ok();
+    }
+
     [HttpPut("{matchId}/finish")]
     public async Task<IActionResult> FinishMatch(Guid matchId, [FromBody] MatchResultRequestDto matchResult)
     {
@@ -36,13 +43,6 @@ public class MatchController(ISender sender) : ControllerBase
     public async Task<IActionResult> DeleteMatch(Guid matchId)
     {
         await sender.Send(new RemoveMatchCommand(matchId));
-        return Ok();
-    }
-
-    [HttpPut("{matchId}")]
-    public async Task<IActionResult> UpdateMatch(Guid matchId, [FromBody] UpdateMatchDto match)
-    {
-        await sender.Send(new UpdateMatchCommand(matchId, match));
         return Ok();
     }
 }

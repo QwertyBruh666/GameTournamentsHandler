@@ -11,6 +11,7 @@ public class CacheProvider(IDistributedCache cache) : ICacheProvider
         var cached = await cache.GetStringAsync(key);
         if (string.IsNullOrEmpty(cached))
             return default;
+        Console.WriteLine(cached);
         return JsonSerializer.Deserialize<T>(cached);
     }
 

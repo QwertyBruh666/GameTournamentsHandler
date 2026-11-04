@@ -5,6 +5,7 @@ namespace Application.BusinessLogic.Matches.Dtos;
 public record CreateMatchDto(
     DateTime StartsAt,
     DateTime EndsAt,
-    MatchStatus Status = MatchStatus.Pending,
+    int Position,
     Guid? Team1Id = null,
-    Guid? Team2Id = null);
+    Guid? Team2Id = null,
+    MatchStatus Status = MatchStatus.Pending);
