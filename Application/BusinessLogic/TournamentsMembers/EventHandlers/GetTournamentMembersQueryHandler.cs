@@ -12,7 +12,7 @@ public class GetTournamentMembersQueryHandler(IAppDbContext appDbContext) : IReq
     {
         return await appDbContext.TournamentMembers
             .Where(tm => tm.TournamentId == request.TournamentId)
-            .Select(tm => new TournamentMemberDto(tm.Id, tm.Team!.Name, tm.Team!.GameId, tm.Team!.Game!.Name))
+            .Select(tm => new TournamentMemberDto(tm.Id, tm.TeamId, tm.Team!.Name, tm.Team!.GameId, tm.Team!.Game!.Name))
             .ToListAsync(cancellationToken);
     }
 }

@@ -24,8 +24,8 @@ public class CreateMatchCommandHandler(IAppDbContext appDbContext, ICurrentUser 
             .FirstOrDefaultAsync(
                 m => 
                     m.TournamentId == request.TournamentId && 
-                    m.Round == 1 &&
-                    m.Position == request.Match.Position, cancellationToken) ?? throw new Exception("There is no empty match");
+                    m.Round == request.Match.Round &&
+                    m.Position == request.Match.Position, cancellationToken) ?? throw new Exception("Match not found");
         
         match.ScheduleStartsAt = matchDto.StartsAt;
         match.ScheduleEndsAt = matchDto.EndsAt;
