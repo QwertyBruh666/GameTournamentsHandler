@@ -2,6 +2,7 @@ using Application.BusinessLogic.TournamentsMembers.Commands;
 using Application.BusinessLogic.TournamentsMembers.Dtos;
 using Domain.Enums;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
@@ -9,6 +10,7 @@ namespace Web.Controllers;
 [Route("api/tournament-members")]
 public class TournamentMembersController(ISender sender) : ControllerBase  
 {
+    [Authorize]
     [HttpPut("{tournamentMemberId}")]
     public async Task<IActionResult> UpdateTournamentMemberStatus(Guid tournamentMemberId, [FromBody] TournamentMemberStatus newStatus)
     {

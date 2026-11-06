@@ -2,6 +2,7 @@ using Application.BusinessLogic.RoleUpgradeRequests.Commands;
 using Application.BusinessLogic.RoleUpgradeRequests.Queries;
 using Domain.Enums;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
@@ -11,11 +12,13 @@ namespace Web.Controllers;
 public class RoleUpgradeRequestController(ISender sender) : ControllerBase
 {
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetRequests()
     {
         return Ok(await sender.Send(new GetRoleUpgradeRequestsQuery()));
     }
 
+    [Authorize]
     [HttpPut("{requestId}/status/approve")]
     public async Task<IActionResult> ApproveRequest(Guid requestId)
     {
@@ -23,6 +26,7 @@ public class RoleUpgradeRequestController(ISender sender) : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpPut("{requestId}/status/reject")]
     public async Task<IActionResult> RejectRequest(Guid requestId)
     {
@@ -30,6 +34,7 @@ public class RoleUpgradeRequestController(ISender sender) : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> PostRequest([FromBody] UserRole newRole)
     {

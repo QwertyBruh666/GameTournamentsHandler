@@ -489,7 +489,7 @@ namespace Infrastructure.DataBase.Migrations
                         .WithMany("OrganizedTournaments")
                         .HasForeignKey("UserId");
 
-                    b.HasOne("Domain.Entities.Team", "Winner")
+                    b.HasOne("Domain.Entities.TournamentMember", "Winner")
                         .WithOne()
                         .HasForeignKey("Domain.Entities.Tournament", "WinnerId");
 

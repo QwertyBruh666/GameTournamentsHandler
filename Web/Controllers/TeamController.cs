@@ -6,6 +6,7 @@ using Application.BusinessLogic.Teams.Criteria;
 using Application.BusinessLogic.Teams.Dtos;
 using Application.BusinessLogic.Teams.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
@@ -13,11 +14,11 @@ namespace Web.Controllers;
 [Route("api/teams")]
 public class TeamController(ISender sender) : ControllerBase
 {
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateTeam([FromBody]CreateTeamDto newTeam)
     {
-        await sender.Send(new AddTeamCommand(newTeam));
-        return Ok();
+        return Ok(await sender.Send(new AddTeamCommand(newTeam)));
     }
 
     [HttpGet]
@@ -34,6 +35,7 @@ public class TeamController(ISender sender) : ControllerBase
         return Ok(team);
     }
 
+    [Authorize]
     [HttpPut("{teamId}")]
     public async Task<ActionResult<Guid>> UpdateTeam(Guid teamId, [FromBody] UpdateTeamDto team)
     {
@@ -41,6 +43,7 @@ public class TeamController(ISender sender) : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpDelete("{teamId}")]
     public async Task<IActionResult> DeleteTeam(Guid teamId)
     {
@@ -48,11 +51,11 @@ public class TeamController(ISender sender) : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpPost("{teamId}/members")]
     public async Task<ActionResult<Guid>> AddTeamMember(Guid teamId, [FromBody] CreateTeamMemberDto team)
     {
-       Guid memberId = await sender.Send(new AddTeamMemberCommand(teamId, team));
-       return Ok(memberId);
+       return Ok(await sender.Send(new AddTeamMemberCommand(teamId, team)));
     }
 
     [HttpGet("{teamId}/members")]

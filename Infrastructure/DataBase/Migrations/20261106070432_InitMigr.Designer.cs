@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.DataBase.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261102182838_FixedNextMatchConstr")]
-    partial class FixedNextMatchConstr
+    [Migration("20261106070432_InitMigr")]
+    partial class InitMigr
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -492,7 +492,7 @@ namespace Infrastructure.DataBase.Migrations
                         .WithMany("OrganizedTournaments")
                         .HasForeignKey("UserId");
 
-                    b.HasOne("Domain.Entities.Team", "Winner")
+                    b.HasOne("Domain.Entities.TournamentMember", "Winner")
                         .WithOne()
                         .HasForeignKey("Domain.Entities.Tournament", "WinnerId");
 

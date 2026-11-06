@@ -7,9 +7,9 @@ using MediatR;
 
 namespace Application.BusinessLogic.Matches.EventHandlers;
 
-public class FinishMatchCommandHandler(IAppDbContext appDbContext, ICurrentUser currUser, IAccessService<Match> auth) : IRequestHandler<FinishMatchCommand, Guid>
+public class FinishMatchCommandHandler(IAppDbContext appDbContext, ICurrentUser currUser, IAccessService<Match> auth) : IRequestHandler<FinishMatchCommand>
 {
-    public async Task<Guid> Handle(FinishMatchCommand request, CancellationToken cancellationToken)
+    public async Task Handle(FinishMatchCommand request, CancellationToken cancellationToken)
     {
         MatchResultRequestDto results = request.MatchResult;
         
@@ -30,7 +30,13 @@ public class FinishMatchCommandHandler(IAppDbContext appDbContext, ICurrentUser 
         else if (match.Participant1?.Status == TournamentMemberStatus.Disqualified || match.Participant2?.Status == TournamentMemberStatus.Disqualified)
             winner = match.Participant1!.Status == TournamentMemberStatus.Disqualified ? match.Participant2! : match.Participant1!;
         else if (match.Participant1Id == null || match.Participant2Id == null)
+        {
             winner = match.Participant1 ?? match.Participant2!;
+            if (winner.Id == match.Participant1Id)
+                match.Participant1Score = 1;
+            else
+                match.Participant2Score = 0;
+        }
         else
             throw new Exception("You need at least one participant to finish a match");
 
@@ -43,16 +49,14 @@ public class FinishMatchCommandHandler(IAppDbContext appDbContext, ICurrentUser 
         else
         {
             await appDbContext.Matches.Entry(match).Reference(m => m.NextMatch).LoadAsync(cancellationToken);
-            if(match.Participant1Id == winner.Id) 
-                match.NextMatch!.Participant1Id = winner.Id;
-            else
+            if(match.Position % 2 == 0)
                 match.NextMatch!.Participant2Id = winner.Id;
+            else
+                match.NextMatch!.Participant1Id = winner.Id;
         }
         
         match.Status = MatchStatus.Finished;
 
         await appDbContext.SaveChangesAsync(cancellationToken);
-        
-        return match.Id;
     }
 }

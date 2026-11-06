@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Application.BusinessLogic.RoleUpgradeRequests.Commands;
 
-public record RequestRoleUpgradeCommand(UserRole NewRole) : IRequest;
+public record RequestRoleUpgradeCommand(UserRole NewRole) : IRequest<Guid>;

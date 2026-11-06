@@ -6,8 +6,4 @@ using MediatR;
 
 namespace Application.BusinessLogic.Teams.Queries;
 
-public record GetTeamsQuery(TeamFilter Filter) : IRequest<List<TeamDto>>, ICacheable
-{
-    public string GetCacheKey() => $"teams:{JsonSerializer.Serialize(Filter)}";
-    public TimeSpan CacheDuration { get; } =  TimeSpan.FromSeconds(60);
-}
+public record GetTeamsQuery(TeamFilter Filter) : IRequest<List<TeamDto>>;

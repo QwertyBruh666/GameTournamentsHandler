@@ -66,7 +66,7 @@ public class CreateTournamentCommandHandler(IAppDbContext appDbContext, ICurrent
             ParticipantsCount = tournamentDto.ParticipantsCount
         };
         
-        int roundCount = (int)Math.Log2(tournamentDto.ParticipantsCount) + 1;
+        int roundCount = (int)Math.Log2(tournamentDto.ParticipantsCount)/2 + 1;
         tournament.Matches = [];
 
         Match finalMatch = new Match();

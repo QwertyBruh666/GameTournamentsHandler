@@ -9,6 +9,7 @@ using Application.BusinessLogic.TournamentsMembers.Dtos;
 using Application.BusinessLogic.TournamentsMembers.Queries;
 using Domain.Enums;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
@@ -17,6 +18,7 @@ namespace Web.Controllers;
 [Route("api/tournaments")]
 public class TournamentController(ISender sender) : ControllerBase
 {
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateTournament([FromBody] CreateTournamentDto newTournament)
     {
@@ -30,6 +32,7 @@ public class TournamentController(ISender sender) : ControllerBase
         return Ok(tournaments);
     }
 
+    [Authorize]
     [HttpPut("{tournamentId}")]
     public async Task<IActionResult> UpdateTournament(Guid tournamentId, [FromBody] UpdateTournamentDto updateTournament)
     {
@@ -37,6 +40,7 @@ public class TournamentController(ISender sender) : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpPut("{tournamentId}/status")]
     public async Task<IActionResult> UpdateTournamentStatus(Guid tournamentId, [FromBody] TournamentStatus newTournamentStatus)
     {
@@ -44,6 +48,7 @@ public class TournamentController(ISender sender) : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpDelete("{tournamentId}")]
     public async Task<IActionResult> DeleteTournament(Guid tournamentId)
     {
@@ -51,11 +56,11 @@ public class TournamentController(ISender sender) : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpPost("{tournamentId}/members")]
     public async Task<ActionResult<Guid>> AddMember(Guid tournamentId, [FromBody] Guid teamId)
     {
-        Guid tournamentMemberId = await sender.Send(new AddTournamentMemberCommand(tournamentId, teamId));
-        return Ok(tournamentMemberId);
+        return Ok(await sender.Send(new AddTournamentMemberCommand(tournamentId, teamId)));
     }
 
     [HttpGet("{tournamentId}/members")]
@@ -65,10 +70,10 @@ public class TournamentController(ISender sender) : ControllerBase
         return Ok(members);
     }
     
+    [Authorize]
     [HttpPost("{tournamentId}/matches")]
-    public async Task<IActionResult> CreateMatch(Guid tournamentId, CreateMatchDto match)
+    public async Task<IActionResult> CreateMatch(Guid tournamentId, [FromBody] CreateMatchDto match)
     {
-        await sender.Send(new CreateMatchCommand(tournamentId, match));
-        return Ok();
+        return Ok(await sender.Send(new CreateMatchCommand(tournamentId, match)));
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.BusinessLogic.Tournaments.EventHandlers;
 
-public class GetTournamentQueryHandler(IAppDbContext appDbContext, ICurrentUser currUser) : IRequestHandler<GetTournamentQuery, TournamentDto>
+public class GetTournamentQueryHandler(IAppDbContext appDbContext) : IRequestHandler<GetTournamentQuery, TournamentDto>
 {
     public async Task<TournamentDto> Handle(GetTournamentQuery request, CancellationToken cancellationToken)
     {
@@ -17,7 +17,7 @@ public class GetTournamentQueryHandler(IAppDbContext appDbContext, ICurrentUser 
                 t.Description,
                 new OrganizerDto(t.OrganizerId, t.Organizer!.UserName, t.Organizer!.Email),
                 new TournamentGameDto(t.GameId, t.Game!.Name),
-                t.Winner != null ? new TournamentWinnerDto(t.WinnerId!.Value, t.Winner!.Name) : null,
+                t.Winner != null ? new TournamentWinnerDto(t.WinnerId!.Value, t.Winner!.Team!.Name) : null,
                 t.Status,
                 t.RegistrationOpensAt,
                 t.RegistrationClosesAt,

@@ -7,5 +7,4 @@ public record CreateMatchDto(
     DateTime EndsAt,
     int Position,
     Guid? Team1Id = null,
-    Guid? Team2Id = null,
-    MatchStatus Status = MatchStatus.Pending);
+    Guid? Team2Id = null);

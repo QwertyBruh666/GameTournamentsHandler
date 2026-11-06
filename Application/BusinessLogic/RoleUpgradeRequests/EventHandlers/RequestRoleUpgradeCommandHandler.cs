@@ -7,12 +7,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.BusinessLogic.RoleUpgradeRequests.EventHandlers;
 
-public class RequestRoleUpgradeCommandHandler(IAppDbContext appDbContext, ICurrentUser currUser) : IRequestHandler<RequestRoleUpgradeCommand>
+public class RequestRoleUpgradeCommandHandler(IAppDbContext appDbContext, ICurrentUser currUser) : IRequestHandler<RequestRoleUpgradeCommand, Guid>
 {
-    public async Task Handle(RequestRoleUpgradeCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(RequestRoleUpgradeCommand request, CancellationToken cancellationToken)
     {
-        User admin = await appDbContext.Users.FirstAsync(u => u.UserRole == UserRole.Admin, cancellationToken);
-        await appDbContext.RoleUpgradeRequests.AddAsync(new RoleUpgradeRequest { RequesterId = currUser.GetUserId(), NewRole = request.NewRole}, cancellationToken);
+        RoleUpgradeRequest requestDb = new RoleUpgradeRequest
+            { RequesterId = currUser.GetUserId(), NewRole = request.NewRole };
+        await appDbContext.RoleUpgradeRequests.AddAsync(requestDb, cancellationToken);
         await appDbContext.SaveChangesAsync(cancellationToken);
+        return requestDb.RequesterId;
     }
 }

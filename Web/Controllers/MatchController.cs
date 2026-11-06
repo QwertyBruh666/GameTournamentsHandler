@@ -3,6 +3,7 @@ using Application.BusinessLogic.Matches.Criteria;
 using Application.BusinessLogic.Matches.Dtos;
 using Application.BusinessLogic.Matches.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
@@ -11,6 +12,7 @@ namespace Web.Controllers;
 [Route("api/matches")]
 public class MatchController(ISender sender) : ControllerBase
 {
+    [Authorize]
     [HttpPut("{matchId}/start")]
     public async Task<IActionResult> StartMatch(Guid matchId)
     {
@@ -18,6 +20,7 @@ public class MatchController(ISender sender) : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpPut("{matchId}/finish")]
     public async Task<IActionResult> FinishMatch(Guid matchId, [FromBody] MatchResultRequestDto matchResult)
     {
@@ -39,6 +42,7 @@ public class MatchController(ISender sender) : ControllerBase
         return Ok(matches);
     }
 
+    [Authorize]
     [HttpDelete("{matchId}")]
     public async Task<IActionResult> DeleteMatch(Guid matchId)
     {

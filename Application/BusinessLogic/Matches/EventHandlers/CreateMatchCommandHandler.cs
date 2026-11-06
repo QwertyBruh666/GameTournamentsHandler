@@ -12,9 +12,9 @@ public class CreateMatchCommandHandler(IAppDbContext appDbContext, ICurrentUser 
     public async Task<Guid> Handle(CreateMatchCommand request, CancellationToken cancellationToken)
     {
         CreateMatchDto matchDto = request.Match;
-        Tournament? tour = await  appDbContext.Tournaments.FindAsync(request.TournamentId) ?? throw new Exception("Tournament not found");
+        Tournament? tour = await  appDbContext.Tournaments.FindAsync(request.TournamentId, cancellationToken) ?? throw new Exception("Tournament not found");
         
-        if (tour.OrganizerId == currUser.GetUserId())
+        if (tour.OrganizerId != currUser.GetUserId())
             throw new Exception("You dont have enough rights");
         
         if (request.Match.StartsAt < tour.StartsAt || request.Match.EndsAt > tour.EndsAt)

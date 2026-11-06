@@ -7,7 +7,7 @@ public class Tournament : BaseEntity
     public Guid OrganizerId { get; set; }
     public User? Organizer { get; set; }
     public Guid? WinnerId { get; set; }
-    public Team? Winner { get; set; }
+    public TournamentMember? Winner { get; set; }
     public required string Name { get; set; }
     public required string Description { get; set; }
     public Guid GameId { get; set; }

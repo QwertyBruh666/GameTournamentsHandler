@@ -1,6 +1,7 @@
 using Application.BusinessLogic.TeamMembers.Commands;
 using Domain.Enums;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
@@ -8,6 +9,7 @@ namespace Web.Controllers;
 [Route("api/team-members")]
 public class TeamMembersController(ISender sender) : ControllerBase
 {
+    [Authorize]
     [HttpPut("{memberId}")]
     public async Task<IActionResult> UpdateTeamMemberRole(Guid memberId, [FromBody] TeamMemberRole role)
     {
@@ -15,6 +17,7 @@ public class TeamMembersController(ISender sender) : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpDelete("{memberId}")]
     public async Task<IActionResult> DeleteTeamMember(Guid memberId)
     {

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.BusinessLogic.RoleUpgradeRequests.EventHandlers;
 
-public class GetRoleUpgradeRequestsQueryHandler(IAppDbContext appDbContext, ICurrentUser currUser) : IRequestHandler<GetRoleUpgradeRequestsQuery, List<RoleUpgradeRequestDto>>
+public class GetRoleUpgradeRequestsQueryHandler(IAppDbContext appDbContext) : IRequestHandler<GetRoleUpgradeRequestsQuery, List<RoleUpgradeRequestDto>>
 {
     public async Task<List<RoleUpgradeRequestDto>> Handle(GetRoleUpgradeRequestsQuery request, CancellationToken cancellationToken)
     {

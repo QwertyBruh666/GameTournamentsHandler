@@ -2,6 +2,7 @@ using Application.BusinessLogic.Games.Commands;
 using Application.BusinessLogic.Games.Dtos;
 using Application.BusinessLogic.Games.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
@@ -16,6 +17,7 @@ public class GameController(ISender sender) : ControllerBase
         return Ok(games);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> AddGame([FromBody] CreateGameDto gameDto)
     {
@@ -23,6 +25,7 @@ public class GameController(ISender sender) : ControllerBase
         return Ok(gameId);
     }
 
+    [Authorize]
     [HttpPut("{gameId}")]
     public async Task<IActionResult> UpdateActiveGameStatus(Guid gameId, [FromBody] bool activeStatus)
     {
