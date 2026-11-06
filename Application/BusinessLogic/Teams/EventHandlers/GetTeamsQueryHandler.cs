@@ -28,7 +28,8 @@ public class GetTeamsQueryHandler(IAppDbContext appDbContext) : IRequestHandler<
                 appDbContext.Matches.Count(m => m.Participant1!.TeamId == t.Id || m.Participant2!.TeamId == t.Id) > 0 ? (double)appDbContext.Matches.Count(m =>
                     (m.Participant1!.TeamId == t.Id && m.Participant1Score > m.Participant2Score ||
                      m.Participant2!.TeamId == t.Id && m.Participant2Score > m.Participant1Score) && m.Status == MatchStatus.Finished) / appDbContext.Matches.Count(m =>
-                    (m.Participant1!.TeamId == t.Id || m.Participant2!.TeamId == t.Id) && m.Status == MatchStatus.Finished) : 0))
+                    (m.Participant1!.TeamId == t.Id || m.Participant2!.TeamId == t.Id) && m.Status == MatchStatus.Finished) : 0,
+                t.Tournaments!.Count))
             .ToListAsync(cancellationToken);
     }
 }

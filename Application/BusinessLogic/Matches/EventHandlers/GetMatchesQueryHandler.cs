@@ -17,7 +17,7 @@ public class GetMatchesQueryHandler(IAppDbContext appDbContext) : IRequestHandle
                 (filter.TournamentId == null || m.TournamentId == filter.TournamentId) &&
                 (filter.Round == null || m.Round == filter.Round) &&
                 (filter.TeamId == null || (m.Participant1!.TeamId == filter.TeamId || m.Participant2!.TeamId == filter.TeamId)) && 
-                ((filter.Team1Id == null || filter.Team2Id == null) || m.Participant1Id ==  filter.Team1Id && m.Participant2Id == filter.Team2Id) &&
+                ((filter.Team1Id == null || filter.Team2Id == null) || m.Participant1!.TeamId ==  filter.Team1Id && m.Participant2!.TeamId == filter.Team2Id) &&
                 (filter.Status == null || m.Status == filter.Status) &&
                 (filter.FromDate == null || m.ScheduleStartsAt >= filter.FromDate) &&
                 (filter.ToDate == null || m.ScheduleEndsAt <= filter.ToDate))
